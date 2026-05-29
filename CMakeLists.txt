@@ -56,6 +56,8 @@ target_link_libraries(imgui PUBLIC glfw OpenGL::GL)
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
+    src/Simulation.cpp
+    src/physics/Physics.cpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
     OpenGL::GL
