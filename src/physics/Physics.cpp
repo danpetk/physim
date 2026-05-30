@@ -1,5 +1,9 @@
 #include "Physics.hpp"
 
-// void Physics::AddShape(Shape shape) {
-//     s
-// }
+void Physics::AddBody(Shape shape, Vec2 position, double mass) {
+    bodies.emplace_back(
+        std::move(shape),
+        position,
+        mass
+    );
+}

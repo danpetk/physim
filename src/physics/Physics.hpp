@@ -6,7 +6,7 @@
 
 class Physics {
 public:
-    // void AddShape(Shape shape);
+    void AddBody(Shape shape, Vec2 position, double mass);
 private:
     std::vector<Body> bodies;
 };

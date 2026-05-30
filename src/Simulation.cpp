@@ -3,5 +3,5 @@
 #include "physics/Shape.hpp"
 
 void Simulation::Run() {
-    physics.AddShape(Circle{5});
+    physics.AddBody(Box{5, 5}, Vec2{10, 10}, 100);
 }
