@@ -1,14 +1,18 @@
 #pragma once
 
+#include <cassert>
+
 #include "Shape.hpp"
 #include "Vec.hpp"
 
-class Body {
+struct Body {
 public:
-    Body(Shape s, Vec2 p, double m) : shape{std::move(s)}, position{p}, mass{m} {}
-private:
-    double mass = 0;
+    Shape shape;
     Vec2 position;
     Vec2 velocity;
-    Shape shape;
+    double mass = 0.0;
+    
+    Body(Shape s, Vec2 p, double m) : shape{std::move(s)}, position{p}, mass{m} {
+        assert(mass > 0);
+    }
 };

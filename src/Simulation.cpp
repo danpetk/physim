@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 
 #include "physics/Shape.hpp"
+
+#include <cassert>
 #include<iostream>
 
 // Forward Declaration
@@ -21,13 +23,14 @@ int Simulation::Run() {
     
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        
         glClear(GL_COLOR_BUFFER_BIT);
+
+        renderer.DrawBodies(physics.GetBodies());
 
         glfwSwapBuffers(window);
     }
 
-    return -1;
+    return 0;   
 }
 
 GLFWwindow* InitWindow() {

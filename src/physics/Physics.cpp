@@ -7,3 +7,7 @@ void Physics::AddBody(Shape shape, Vec2 position, double mass) {
         mass
     );
 }
+
+std::span<const Body> Physics::GetBodies() {
+    return bodies;
+}
