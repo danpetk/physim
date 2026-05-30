@@ -2,5 +2,5 @@
 
 int main() {
     Simulation s;
-    s.Run();
+    return s.Run();
 }

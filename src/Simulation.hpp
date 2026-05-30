@@ -4,7 +4,7 @@
 
 class Simulation {
 public:
-    void Run();
+    int Run();
 private:
     Physics physics;
 };
