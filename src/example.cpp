@@ -58,7 +58,7 @@ int main()
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Physim", nullptr, nullptr);
@@ -81,7 +81,7 @@ int main()
 
     std::cout << "OpenGL " << glGetString(GL_VERSION) << "\n";
 
-    // ── Init ImGui ────────────────────────────────────────────────────────────
+    // ── Init ImGui ────────────────────────────── ──────────────────────────────
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
