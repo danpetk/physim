@@ -7,6 +7,5 @@ class Simulation {
 public:
     int Run();
 private:
-    Physics physics;
-    Renderer renderer;
+
 };

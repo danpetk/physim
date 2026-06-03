@@ -58,6 +58,10 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/Simulation.cpp
     src/physics/Physics.cpp
+    src/rendering/VertexBuffer.cpp
+    src/rendering/VertexArray.cpp
+    src/rendering/ElementBuffer.cpp
+
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
     OpenGL::GL

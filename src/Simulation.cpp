@@ -13,6 +13,7 @@
 GLFWwindow* InitWindow();
 
 int Simulation::Run() {
+    Physics physics;
     physics.AddBody(Box{5, 5}, Vec2{10, 10}, 100);
     physics.AddBody(Circle{5}, Vec2{10, 10}, 100);
    
@@ -20,15 +21,18 @@ int Simulation::Run() {
     if (!(window = InitWindow())) {
         return -1;
     }
+
+    {
+        Renderer renderer;
+        while (!glfwWindowShouldClose(window)) {
+            glfwPollEvents();
+            glClear(GL_COLOR_BUFFER_BIT);
     
-    while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        renderer.DrawBodies(physics.GetBodies());
-
-
-        glfwSwapBuffers(window);
+            renderer.DrawBodies(physics.GetBodies());
+    
+    
+            glfwSwapBuffers(window);
+        }
     }
 
     glfwDestroyWindow(window);
@@ -74,7 +78,7 @@ GLFWwindow* InitWindow() {
         if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
             return;
         }
-        std::println(stderr, "GL ERROR: {}", message);
+        std::println(stderr, "GL: {}", message);
         if (type == GL_DEBUG_TYPE_ERROR) {
             std::terminate();
         }    
