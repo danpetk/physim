@@ -5,18 +5,15 @@
 
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
+#include "ElementBuffer.hpp"
 #include "../physics/Body.hpp"
 
 class Renderer {
 public:
-    void DrawBodies(std::span<const Body> bodies) {
-        for (const auto& body: bodies) {
-            std::visit([&] (const auto& shape) {
-                // Draw(shape, body.position);
-            }, body.shape);
-        }
-    }
+    Renderer();
+    void DrawBodies(std::span<const Body> bodies);
 private:
     VertexArray array;
     VertexBuffer buf;
+    ElementBuffer elem;
 };

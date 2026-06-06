@@ -7,6 +7,9 @@ class VertexBuffer {
 public:
     VertexBuffer();
     ~VertexBuffer();
+
+    void Bind();
+    void Unbind();
 private:
     GLuint id;
 };

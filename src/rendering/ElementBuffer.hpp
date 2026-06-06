@@ -7,6 +7,9 @@ class ElementBuffer {
 public:
     ElementBuffer();
     ~ElementBuffer();
+
+    void Bind();
+    void Unbind();
 private:
     GLuint id;
 };

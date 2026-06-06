@@ -58,7 +58,9 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/Simulation.cpp
     src/physics/Physics.cpp
+    src/rendering/Renderer.cpp
     src/rendering/VertexBuffer.cpp
+    src/rendering/VertexBufferLayout.cpp
     src/rendering/VertexArray.cpp
     src/rendering/ElementBuffer.cpp
 

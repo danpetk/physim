@@ -12,7 +12,7 @@ public:
     Vec2 velocity;
     double mass = 0.0;
     
-    Body(Shape s, Vec2 p, double m) : shape{std::move(s)}, position{p}, mass{m} {
+    constexpr Body(Shape s, Vec2 p, double m) noexcept : shape{std::move(s)}, position{p}, mass{m} {
         assert(mass > 0);
     }
 };

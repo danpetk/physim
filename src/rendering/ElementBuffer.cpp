@@ -7,3 +7,11 @@ ElementBuffer::ElementBuffer() {
 ElementBuffer::~ElementBuffer() {
     glDeleteBuffers(1, &id);
 }
+
+void ElementBuffer::Bind() {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+}
+
+void ElementBuffer::Unbind() {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}

@@ -8,6 +8,6 @@ void Physics::AddBody(Shape shape, Vec2 position, double mass) {
     );
 }
 
-std::span<const Body> Physics::GetBodies() {
+std::span<const Body> Physics::GetBodies() const noexcept {
     return bodies;
 }
