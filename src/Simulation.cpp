@@ -12,7 +12,7 @@
 // Forward Declaration
 GLFWwindow* InitWindow();
 
-int Simulation::Run() {
+int Simulation::Run() const noexcept {
     Physics physics;
     physics.AddBody(Box{5, 5}, Vec2{10, 10}, 100);
     physics.AddBody(Circle{5}, Vec2{10, 10}, 100);

@@ -5,7 +5,7 @@
 
 class Simulation {
 public:
-    int Run();
+    [[nodiscard]] int Run() const noexcept;
 private:
 
 };

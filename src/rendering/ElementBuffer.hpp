@@ -5,11 +5,11 @@
 
 class ElementBuffer {
 public:
-    ElementBuffer();
-    ~ElementBuffer();
+    ElementBuffer() noexcept;
+    ~ElementBuffer() noexcept;
 
-    void Bind();
-    void Unbind();
+    void Bind() const noexcept;
+    void Unbind() const noexcept;
 private:
     GLuint id;
 };

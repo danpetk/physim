@@ -5,11 +5,11 @@
 
 class VertexBuffer {
 public:
-    VertexBuffer();
-    ~VertexBuffer();
+    VertexBuffer() noexcept;
+    ~VertexBuffer() noexcept;
 
-    void Bind();
-    void Unbind();
+    void Bind() const noexcept;
+    void Unbind() const noexcept;
 private:
     GLuint id;
 };
