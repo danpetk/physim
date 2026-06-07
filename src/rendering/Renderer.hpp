@@ -13,7 +13,11 @@ public:
     Renderer();
     void DrawBodies(std::span<const Body> bodies);
 private:
-    VertexArray array;
-    VertexBuffer buf;
-    ElementBuffer elem;
+    VertexArray boxVao;
+    VertexBuffer boxVbo;
+    ElementBuffer boxEbo;
+
+    std::vector<double> verts {-0.5, -0.5, 0.0, 0.5, 0.5, -0.5}; 
+    std::vector<unsigned int> indexes {0, 1, 2};
+
 };

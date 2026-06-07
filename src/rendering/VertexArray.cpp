@@ -23,7 +23,12 @@ void VertexArray::Unbind() const noexcept {
 }
 
 void VertexArray::BindVertexBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
-    BindLock a{*this}; 
-    BindLock b{vb};
+    Bind();
+    vb.Bind();
     layout.SetAndEnableAttribPointers();
+}
+
+void VertexArray::BindElementBuffer(const ElementBuffer& eb) {
+    Bind();
+    eb.Bind();
 }

@@ -20,4 +20,4 @@ struct Circle {
     }
 };
 
-using Shape = std::variant<Box, Circle>;
+using Shape = std::variant<Box>;
