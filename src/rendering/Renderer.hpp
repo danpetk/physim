@@ -6,12 +6,12 @@
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
 #include "ElementBuffer.hpp"
-#include "../physics/Body.hpp"
+#include "../physics/Shape.hpp"
 
 class Renderer {
 public:
     Renderer();
-    void DrawBodies(std::span<const Body> bodies);
+    void DrawShapes(std::span<const Shape> bodies);
 private:
     VertexArray boxVao;
     VertexBuffer boxVbo;

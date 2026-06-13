@@ -1,13 +1,9 @@
 #include "Physics.hpp"
 
-void Physics::AddBody(Shape shape, Vec2 position, double mass) {
-    bodies.emplace_back(
-        std::move(shape),
-        position,
-        mass
-    );
+void Physics::AddShape(Shape shape) {
+    shapes.emplace_back(std::move(shape));
 }
 
-std::span<const Body> Physics::GetBodies() const noexcept {
-    return bodies;
+std::span<const Shape> Physics::GetShapes() const noexcept {
+    return shapes;
 }

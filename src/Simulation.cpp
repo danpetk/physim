@@ -73,7 +73,7 @@ GLFWwindow* InitWindow();
 
 int Simulation::Run() const noexcept {
     Physics physics;
-    physics.AddBody(Box{5, 5}, Vec2{10, 10}, 100);
+    physics.AddShape(Box{{Vec2{10, 10}, 100}, 5, 5});
     // physics.AddBody(Circle{5}, Vec2{10, 10}, 100);
    
     GLFWwindow* window;
@@ -91,7 +91,7 @@ int Simulation::Run() const noexcept {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
     
-            renderer.DrawBodies(physics.GetBodies());
+            renderer.DrawShapes(physics.GetShapes());
             
     
             glfwSwapBuffers(window);

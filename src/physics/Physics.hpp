@@ -3,12 +3,12 @@
 #include <span>
 #include <vector>
 
-#include "Body.hpp"
+#include "Shape.hpp"
 
 class Physics {
 public:
-    void AddBody(Shape shape, Vec2 position, double mass);
-    [[nodiscard]] std::span<const Body> GetBodies() const noexcept;
+    void AddShape(Shape shape);
+    [[nodiscard]] std::span<const Shape> GetShapes() const noexcept;
 private: 
-    std::vector<Body> bodies;
+    std::vector<Shape> shapes;
 };
