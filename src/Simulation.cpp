@@ -91,9 +91,9 @@ int Simulation::Run() const noexcept {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
     
+            physics.Update();
             renderer.DrawShapes(physics.GetShapes());
             
-    
             glfwSwapBuffers(window);
         }
     }

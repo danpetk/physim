@@ -1,7 +1,9 @@
 #pragma once
 
+#include <array>
 #include <cassert>
 #include <variant>
+
 
 #include "Vec.hpp"
 
@@ -28,6 +30,17 @@ struct Box : Body {
     constexpr Box(WorldState s, double w, double h) noexcept : Body(std::move(s)), width{w}, height{h} {
         assert(width > 0);
         assert(height > 0);
+    }
+
+    std::array<Vec2, 4> GetVertices() {
+        double w2 = width / 2;
+        double h2 = height / 2;
+        return {
+            state.position + Vec2{-w2, h2},
+            state.position + Vec2{w2, h2},
+            state.position + Vec2{-w2, -h2},
+            state.position + Vec2{w2, -h2}
+        };
     }
 };
 

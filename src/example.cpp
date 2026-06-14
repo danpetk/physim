@@ -18,7 +18,7 @@ static unsigned int CompileShader(unsigned int type, const std::string& source) 
     if (res == GL_FALSE) {
         int length;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char *)alloca(length *sizeof(char));
+        char* message   = (char *)alloca(length *sizeof(char));
         glGetShaderInfoLog(id, length, &length, message);
         std::println(std::cerr, "Failed to compile shader: {}", message);
         glDeleteShader(id);
@@ -78,8 +78,6 @@ int main()
         glfwTerminate();
         return -1;
     }
-
-    std::cout << "OpenGL " << glGetString(GL_VERSION) << "\n";
 
     // ── Init ImGui ────────────────────────────── ──────────────────────────────
     IMGUI_CHECKVERSION();

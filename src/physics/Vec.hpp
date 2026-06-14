@@ -5,6 +5,10 @@
 struct Vec2 {
     double x = 0;
     double y = 0;
+
+    Vec2 operator+(const Vec2& other) {
+        return {x + other.x, y + other.y};
+    }
 };
 
 template<>

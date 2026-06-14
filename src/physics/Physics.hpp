@@ -8,6 +8,7 @@
 class Physics {
 public:
     void AddShape(Shape shape);
+    void Update();
     [[nodiscard]] std::span<const Shape> GetShapes() const noexcept;
 private: 
     std::vector<Shape> shapes;
