@@ -2,13 +2,15 @@
 
 #include "VertexBufferLayout.hpp"
 
-Renderer::Renderer() {
+Renderer::Renderer() : boxProgram{"assets/test.vertex.shader", "assets/test.fragment.shader"}{
 
     VertexBufferLayout boxLayout;
     // Two double for x,y
     boxLayout.AddAttribute<double>(2);
     boxVao.BindVertexBuffer(boxVbo, boxLayout);
     boxVao.BindElementBuffer(boxEbo);
+
+    boxProgram.Bind();
 }
 
 void Renderer::DrawShapes(std::span<const Shape> shapes) {
