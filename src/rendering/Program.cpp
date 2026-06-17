@@ -13,6 +13,24 @@ void Program::Unbind() const noexcept {
     glUseProgram(0);
 }
 
+GLint Program::GetUniformLocation(std::string_view name) noexcept {
+    auto it = uniformLocations.find(std::string{name});
+    if (it != uniformLocations.end()) {
+        return it->second;
+    }
+    GLint location = glGetUniformLocation(id, std::string{name}.c_str());
+    if (location == -1) {
+        std::println(std::cerr, "Failed to get uniform location for {}", name);
+        std::terminate();
+    }
+    uniformLocations[std::string{name}] = location;
+    return location;
+}
+
+void Program::SetUniformMatrix4fv(GLint location, std::span<const float, 16> value) const noexcept {
+    glUniformMatrix4fv(location, 1, GL_FALSE, value.data());
+}
+
 Program::Program(std::string_view vertexFile, std::string_view fragmentFile) {
     std::println(std::cerr, "Loading shader files: {} {}", vertexFile, fragmentFile);
     

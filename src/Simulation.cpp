@@ -1,5 +1,6 @@
 #include "Simulation.hpp"
 
+#include <array>
 #include <cassert>
 #include <thread>
 #include <print>
@@ -9,12 +10,15 @@
 
 #include "physics/Shape.hpp"
 
+static constexpr int WIDTH = 1280;
+static constexpr int HEIGHT = 720;
+
 // Forward Declaration
 GLFWwindow* InitWindow();
 
 int Simulation::Run() const noexcept {
     Physics physics;
-    physics.AddShape(Box{{Vec2{10, 10}, 100}, 5, 5});
+    physics.AddShape(Box{{Vec2{0, 0}, 100}, 0.5, 0.5});
     // physics.AddBody(Circle{5}, Vec2{10, 10}, 100);
    
     GLFWwindow* window;
@@ -23,7 +27,7 @@ int Simulation::Run() const noexcept {
     }
 
     {
-        Renderer renderer;
+        Renderer renderer{WIDTH, HEIGHT};
 
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
@@ -54,7 +58,7 @@ GLFWwindow* InitWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(1280, 720, "Physim", NULL, NULL);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "Physim", NULL, NULL);
     if (!window) {
         std::println(stderr, "Error creating window");
         glfwTerminate();

@@ -6,6 +6,4 @@
 class Simulation {
 public:
     [[nodiscard]] int Run() const noexcept;
-private:
-
 };

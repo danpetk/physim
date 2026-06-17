@@ -16,7 +16,7 @@ public:
     // Allocating a new buffer every frame is probably not a good idea, so this will
     // most likely be replaced / not used at the end
     template <typename V>
-    void AllocNewBufferData(std::span<V> data) {
+    void AllocNewBufferData(std::span<const V> data) {
         Bind();
         glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(V), data.data(), GL_DYNAMIC_DRAW);
     }

@@ -1,7 +1,9 @@
 #include "Physics.hpp"
 
 void Physics::Update() {
-
+    for (auto& shape : shapes) {
+        std::get<Box>(shape).state.position += {0.01, 0.01};
+    }
 }
 
 void Physics::AddShape(Shape shape) {

@@ -32,7 +32,7 @@ struct Box : Body {
         assert(height > 0);
     }
 
-    std::array<Vec2, 4> GetVertices() {
+    std::array<Vec2, 4> GetVertices() const noexcept {
         double w2 = width / 2;
         double h2 = height / 2;
         return {

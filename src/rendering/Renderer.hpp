@@ -11,7 +11,7 @@
 
 class Renderer {
 public:
-    Renderer();
+    Renderer(int width, int height);
     void DrawShapes(std::span<const Shape> bodies);
 private:
     VertexArray boxVao;
@@ -20,6 +20,6 @@ private:
     Program boxProgram;
 
     std::vector<double> verts {-0.5, -0.5, 0.0, 0.5, 0.5, -0.5}; 
-    std::vector<unsigned int> indexes {0, 1, 2};
+    std::vector<unsigned int> indexes {0, 1, 2, 1, 2, 3};
 
 };
