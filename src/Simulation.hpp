@@ -5,5 +5,10 @@
 
 class Simulation {
 public:
-    [[nodiscard]] int Run() const noexcept;
+    Simulation(GLFWwindow* w, int width, int height) : window{w}, renderer{width, height} {}
+    void Run();
+private:
+    GLFWwindow* window;
+    Physics physics;
+    Renderer renderer;
 };
