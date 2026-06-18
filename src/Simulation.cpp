@@ -17,10 +17,14 @@ void Simulation::Run() {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
 
-        physics.Update();
+        // physics.Update();
         renderer.DrawShapes(physics.GetShapes());
 
         glfwSwapBuffers(window);
     }
+}
+
+void Simulation::OnWindowResize(int width, int height) {
+    renderer.ResizeView(width, height);
 }
 

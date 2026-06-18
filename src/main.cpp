@@ -3,8 +3,8 @@
 
 #include "Simulation.hpp"
 
-static constexpr int WIDTH = 1280;
-static constexpr int HEIGHT = 720;
+static constexpr int WIDTH = 720;
+static constexpr int HEIGHT = 1280;
 
 void APIENTRY debugCallback(GLenum source, GLenum type, GLuint id,
                             GLenum severity, GLsizei length,
@@ -58,6 +58,8 @@ int main() {
 
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int w, int h) {
         glViewport(0, 0, w, h);
+        Simulation* s = static_cast<Simulation*>(glfwGetWindowUserPointer(window));
+        s->OnWindowResize(w, h);
     });
 
     s.Run();

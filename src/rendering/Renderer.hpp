@@ -13,7 +13,10 @@ class Renderer {
 public:
     Renderer(int width, int height);
     void DrawShapes(std::span<const Shape> bodies);
+    void ResizeView(int width, int height);
 private:
+    static constexpr float ASPECT_RATIO = 16.0f / 9.0f;
+
     VertexArray boxVao;
     VertexBuffer boxVbo;
     ElementBuffer boxEbo;
@@ -21,5 +24,4 @@ private:
 
     std::vector<double> verts {-0.5, -0.5, 0.0, 0.5, 0.5, -0.5}; 
     std::vector<unsigned int> indexes {0, 1, 2, 1, 2, 3};
-
 };

@@ -10,16 +10,7 @@ Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shade
     boxVao.BindVertexBuffer(boxVbo, boxLayout);
     boxVao.BindElementBuffer(boxEbo);
 
-    std::array<float, 16> scaleProjection = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-    };
-
-    boxProgram.Bind();
-    auto loc = boxProgram.GetUniformLocation("projection");
-    boxProgram.SetUniformMatrix4fv(loc, scaleProjection);
+    ResizeView(width, height);
 }
 
 void Renderer::DrawShapes(std::span<const Shape> shapes) {
@@ -37,4 +28,17 @@ void Renderer::DrawShapes(std::span<const Shape> shapes) {
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
+}
+
+void Renderer::ResizeView(int width, int height) {
+    std::array<float, 16> scaleProjection = {
+        static_cast<float>(height) / width, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    boxProgram.Bind();
+    auto loc = boxProgram.GetUniformLocation("projection");
+    boxProgram.SetUniformMatrix4fv(loc, scaleProjection);
 }

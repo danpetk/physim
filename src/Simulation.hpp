@@ -7,6 +7,7 @@ class Simulation {
 public:
     Simulation(GLFWwindow* w, int width, int height) : window{w}, renderer{width, height} {}
     void Run();
+    void OnWindowResize(int width, int height);
 private:
     GLFWwindow* window;
     Physics physics;
