@@ -32,8 +32,8 @@ void Renderer::DrawShapes(std::span<const Shape> shapes) {
 
 void Renderer::ResizeView(int width, int height) {
     std::array<float, 16> scaleProjection = {
-        static_cast<float>(height) / width, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
+        (2.0f / Renderer::WORLD_HEIGHT) *(static_cast<float>(height) / width), 0.0f, 0.0f, 0.0f,
+        0.0f, 2.0f / Renderer::WORLD_HEIGHT, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };

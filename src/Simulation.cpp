@@ -11,7 +11,7 @@
 #include "physics/Shape.hpp"
 
 void Simulation::Run() {
-    physics.AddShape(Box{{Vec2{0, 0}, 100}, 0.5, 0.5});
+    physics.AddShape(Box{{Vec2{0, 0}, 100}, 2, 2});
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();

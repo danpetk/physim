@@ -15,7 +15,7 @@ public:
     void DrawShapes(std::span<const Shape> bodies);
     void ResizeView(int width, int height);
 private:
-    static constexpr float ASPECT_RATIO = 16.0f / 9.0f;
+    static constexpr int WORLD_HEIGHT = 20;
 
     VertexArray boxVao;
     VertexBuffer boxVbo;

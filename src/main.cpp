@@ -3,8 +3,8 @@
 
 #include "Simulation.hpp"
 
-static constexpr int WIDTH = 720;
-static constexpr int HEIGHT = 1280;
+static constexpr int WIDTH = 1280;
+static constexpr int HEIGHT = 720;
 
 void APIENTRY debugCallback(GLenum source, GLenum type, GLuint id,
                             GLenum severity, GLsizei length,
