@@ -1,8 +1,9 @@
 #include "Physics.hpp"
 
-void Physics::Update() {
+void Physics::Update(double dt) {
     for (auto& body : bodies) {
-        body.state.position += {0, 0.5};
+        body.state.velocity += {0, -9.8 * dt};
+        body.state.position += body.state.velocity * dt;
     }
 }
 

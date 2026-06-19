@@ -11,6 +11,9 @@ namespace utils {
 template <typename T, typename... Ts>
 concept IsOneOf = (std::is_same_v<T, Ts> || ...);
 
+template <typename T>
+concept Numeric = std::is_arithmetic_v<T>;
+
 // Could add more if needed
 template <typename T>
 concept IsAttribType = IsOneOf<T, double, int>;

@@ -10,16 +10,43 @@
 
 #include "physics/Shape.hpp"
 
+// void Simulation::Run() {
+//     physics.AddBody(Box{5, 5}, {Vec2{0, 30}, 100});
+
+//     while (!glfwWindowShouldClose(window)) {
+//         glfwPollEvents();
+//         glClear(GL_COLOR_BUFFER_BIT);
+
+//         physics.Update(1.0/60);
+//         renderer.DrawShapes(physics.GetBodies());
+
+//         glfwSwapBuffers(window);
+//     }
+// }
+
 void Simulation::Run() {
-    physics.AddBody(Box{2, 2}, {Vec2{0, 0}, 100});
+    physics.AddBody(Box{1, 1}, {Vec2{0, 7}, Vec2{0, 1}, 100});
+
+    constexpr double PHYSICS_DT = 1.0 / 120.0;
+    double accumulator = 0.0;
+    double prevTime = glfwGetTime();
 
     while (!glfwWindowShouldClose(window)) {
+        double currentTime = glfwGetTime();
+        double frameTime = currentTime - prevTime;
+        prevTime = currentTime;
+        if (frameTime > 0.25) frameTime = 0.25;
+        accumulator += frameTime;
+
         glfwPollEvents();
+
+        while (accumulator >= PHYSICS_DT) {
+            physics.Update(PHYSICS_DT);
+            accumulator -= PHYSICS_DT;
+        }
+
         glClear(GL_COLOR_BUFFER_BIT);
-
-        physics.Update();
         renderer.DrawShapes(physics.GetBodies());
-
         glfwSwapBuffers(window);
     }
 }

@@ -12,7 +12,7 @@ struct WorldState {
     Vec2 velocity;
     double mass;
    
-    constexpr WorldState(Vec2 p, double m) noexcept : position{p}, mass{m} {
+    constexpr WorldState(Vec2 p, Vec2 v, double m) noexcept : position{p}, velocity{v}, mass{m} {
         assert(mass > 0);
     }
 };

@@ -15,7 +15,7 @@ public:
     void DrawShapes(std::span<const Body> bodies);
     void ResizeView(int width, int height);
 private:
-    static constexpr int WORLD_HEIGHT = 100;
+    static constexpr int WORLD_HEIGHT = 15;
 
     VertexArray boxVao;
     VertexBuffer boxVbo;

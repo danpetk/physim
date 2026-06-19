@@ -1,6 +1,11 @@
 #pragma once
 
+#include <concepts>
 #include <format>
+
+#include "../utils.hpp"
+
+using utils::Numeric;
 
 struct Vec2 {
     double x = 0;
@@ -13,6 +18,19 @@ struct Vec2 {
     Vec2& operator+=(const Vec2& other) {
         x += other.x;
         y += other.y;
+        return *this;
+    }
+
+    template <Numeric T>
+    Vec2 operator*(T scalar) {
+        return {x * scalar, y * scalar};
+    }
+
+    
+    template <Numeric T>
+    Vec2& operator*=(T scalar) {
+        x *= scalar;
+        y *= scalar;
         return *this;
     }
 };

@@ -4,13 +4,19 @@
 
 Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shader", "assets/test.fragment.shader"}{
 
+    boxVbo.CreateNewBuffer(100, GL_DYNAMIC_DRAW);
     VertexBufferLayout boxLayout;
     // Two double for x,y
     boxLayout.AddAttribute<double>(2);
+
     boxVao.BindVertexBuffer(boxVbo, boxLayout);
     boxVao.BindElementBuffer(boxEbo);
 
     ResizeView(width, height);
+    
+    //! TEMP
+    boxEbo.AllocNewBufferData(indexes);
+
 }
 
 void Renderer::DrawShapes(std::span<const Body> shapes) {
@@ -23,8 +29,7 @@ void Renderer::DrawShapes(std::span<const Body> shapes) {
     //! TEMPORARY UNDERNEATH
     
     auto box = std::get<Box>(shapes[0].shape);
-    boxVbo.AllocNewBufferData<Vec2>(box.GetVertices(shapes[0].state));
-    boxEbo.AllocNewBufferData(indexes);
+    boxVbo.BufferSubData<Vec2>(box.GetVertices(shapes[0].state));
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
