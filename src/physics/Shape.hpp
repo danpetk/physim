@@ -17,22 +17,16 @@ struct WorldState {
     }
 };
 
-struct Body {
-public:
-    WorldState state;
-    constexpr Body(WorldState s) noexcept : state{std::move(s)} {}
-};
-
-struct Box : Body {
+struct Box {
     double width;
     double height;
 
-    constexpr Box(WorldState s, double w, double h) noexcept : Body(std::move(s)), width{w}, height{h} {
+    constexpr Box(double w, double h) noexcept : width{w}, height{h} {
         assert(width > 0);
         assert(height > 0);
     }
 
-    std::array<Vec2, 4> GetVertices() const noexcept {
+    std::array<Vec2, 4> GetVertices(const WorldState& state) const noexcept {
         double w2 = width / 2;
         double h2 = height / 2;
         return {
@@ -44,12 +38,19 @@ struct Box : Body {
     }
 };
 
-struct Circle : Body {
+struct Circle {
     double radius = 0;
 
-    Circle(WorldState s, double r) noexcept : Body(std::move(s)), radius{r} {
+    Circle(double r) noexcept : radius{r} {
         assert(radius > 0);
     }
 };
 
 using Shape = std::variant<Box>;
+
+struct Body {
+public:
+    Shape shape;
+    WorldState state;
+    constexpr Body(Shape s, WorldState ws) noexcept : shape{std::move(s)}, state{std::move(ws)} {}
+};

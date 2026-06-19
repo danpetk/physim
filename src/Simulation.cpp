@@ -11,14 +11,14 @@
 #include "physics/Shape.hpp"
 
 void Simulation::Run() {
-    physics.AddShape(Box{{Vec2{0, 0}, 100}, 2, 2});
+    physics.AddBody(Box{2, 2}, {Vec2{0, 0}, 100});
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // physics.Update();
-        renderer.DrawShapes(physics.GetShapes());
+        physics.Update();
+        renderer.DrawShapes(physics.GetBodies());
 
         glfwSwapBuffers(window);
     }

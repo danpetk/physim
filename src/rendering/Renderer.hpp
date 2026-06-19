@@ -12,10 +12,10 @@
 class Renderer {
 public:
     Renderer(int width, int height);
-    void DrawShapes(std::span<const Shape> bodies);
+    void DrawShapes(std::span<const Body> bodies);
     void ResizeView(int width, int height);
 private:
-    static constexpr int WORLD_HEIGHT = 20;
+    static constexpr int WORLD_HEIGHT = 100;
 
     VertexArray boxVao;
     VertexBuffer boxVbo;

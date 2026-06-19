@@ -7,9 +7,9 @@
 
 class Physics {
 public:
-    void AddShape(Shape shape);
+    void AddBody(Shape shape, WorldState state);
     void Update();
-    [[nodiscard]] std::span<const Shape> GetShapes() const noexcept;
+    [[nodiscard]] std::span<const Body> GetBodies() const noexcept;
 private: 
-    std::vector<Shape> shapes;
+    std::vector<Body> bodies;
 };

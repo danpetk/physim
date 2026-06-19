@@ -13,7 +13,7 @@ Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shade
     ResizeView(width, height);
 }
 
-void Renderer::DrawShapes(std::span<const Shape> shapes) {
+void Renderer::DrawShapes(std::span<const Body> shapes) {
     // for (const auto& body: bodies) {
     //     std::visit([&] (const auto& shape) {
     //         // Draw(shape, body.position);
@@ -22,8 +22,8 @@ void Renderer::DrawShapes(std::span<const Shape> shapes) {
 
     //! TEMPORARY UNDERNEATH
     
-    auto box = std::get<Box>(shapes[0]);
-    boxVbo.AllocNewBufferData<Vec2>(box.GetVertices());
+    auto box = std::get<Box>(shapes[0].shape);
+    boxVbo.AllocNewBufferData<Vec2>(box.GetVertices(shapes[0].state));
     boxEbo.AllocNewBufferData(indexes);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
