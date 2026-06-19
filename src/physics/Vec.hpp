@@ -15,25 +15,41 @@ struct Vec2 {
         return {x + other.x, y + other.y};
     }
 
-    Vec2& operator+=(const Vec2& other) {
+    Vec2& operator+=(const Vec2& other) noexcept{
         x += other.x;
         y += other.y;
         return *this;
     }
 
+    Vec2 operator-(const Vec2& other) const noexcept {
+        return {x - other.x, y - other.y};
+    }
+
+    Vec2& operator-=(const Vec2& other) noexcept{
+        x -= other.x;
+        y -= other.y;
+        return *this;
+    }
+
+
     template <Numeric T>
-    Vec2 operator*(T scalar) {
+    Vec2 operator*(T scalar) const noexcept{
         return {x * scalar, y * scalar};
     }
 
     
     template <Numeric T>
-    Vec2& operator*=(T scalar) {
+    Vec2& operator*=(T scalar) noexcept {
         x *= scalar;
         y *= scalar;
         return *this;
     }
 };
+
+template <Numeric T>
+Vec2 operator*(T scalar, const Vec2& other) {
+    return other * scalar;
+}
 
 template<>
 struct std::formatter<Vec2> {

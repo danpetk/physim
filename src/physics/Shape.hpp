@@ -9,6 +9,7 @@
 
 struct WorldState {
     Vec2 position;
+    Vec2 prevPosition;
     Vec2 velocity;
     double mass;
    

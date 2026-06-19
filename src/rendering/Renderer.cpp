@@ -19,20 +19,32 @@ Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shade
 
 }
 
-void Renderer::DrawShapes(std::span<const Body> shapes) {
-    // for (const auto& body: bodies) {
-    //     std::visit([&] (const auto& shape) {
-    //         // Draw(shape, body.position);
-    //     }, body.shape);
-    // }
+// void Renderer::DrawShapes(std::span<const Body> shapes) {
+//     // for (const auto& body: bodies) {
+//     //     std::visit([&] (const auto& shape) {
+//     //         // Draw(shape, body.position);
+//     //     }, body.shape);
+//     // }
 
-    //! TEMPORARY UNDERNEATH
+//     //! TEMPORARY UNDERNEATH
     
+//     auto box = std::get<Box>(shapes[0].shape);
+//     boxVbo.BufferSubData<Vec2>(box.GetVertices(shapes[0].state));
+
+//     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+// }
+
+void Renderer::DrawShapes(std::span<const Body> shapes, double alpha) {
     auto box = std::get<Box>(shapes[0].shape);
-    boxVbo.BufferSubData<Vec2>(box.GetVertices(shapes[0].state));
+    
+    // interpolate position
+    const auto& state = shapes[0].state;
+    WorldState interpState = state;
+    interpState.position = state.prevPosition + alpha * (state.position - state.prevPosition);
 
+    boxVbo.BufferSubData<Vec2>(box.GetVertices(interpState));
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
 }
 
 void Renderer::ResizeView(int width, int height) {

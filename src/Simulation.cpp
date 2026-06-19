@@ -25,9 +25,9 @@
 // }
 
 void Simulation::Run() {
-    physics.AddBody(Box{1, 1}, {Vec2{0, 7}, Vec2{0, 1}, 100});
+    physics.AddBody(Box{2, 2}, {Vec2{0, 7}, Vec2{0, 1}, 100});
 
-    constexpr double PHYSICS_DT = 1.0 / 120.0;
+    constexpr double PHYSICS_DT = 1.0 / 60.0;
     double accumulator = 0.0;
     double prevTime = glfwGetTime();
 
@@ -45,8 +45,10 @@ void Simulation::Run() {
             accumulator -= PHYSICS_DT;
         }
 
+        double alpha = accumulator / PHYSICS_DT;
+
         glClear(GL_COLOR_BUFFER_BIT);
-        renderer.DrawShapes(physics.GetBodies());
+        renderer.DrawShapes(physics.GetBodies(), alpha);
         glfwSwapBuffers(window);
     }
 }

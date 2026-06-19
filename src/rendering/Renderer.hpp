@@ -12,7 +12,7 @@
 class Renderer {
 public:
     Renderer(int width, int height);
-    void DrawShapes(std::span<const Body> bodies);
+    void DrawShapes(std::span<const Body> bodies, double alpha);
     void ResizeView(int width, int height);
 private:
     static constexpr int WORLD_HEIGHT = 15;

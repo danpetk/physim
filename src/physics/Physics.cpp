@@ -2,6 +2,7 @@
 
 void Physics::Update(double dt) {
     for (auto& body : bodies) {
+        body.state.prevPosition = body.state.position;  // save before step
         body.state.velocity += {0, -9.8 * dt};
         body.state.position += body.state.velocity * dt;
     }
