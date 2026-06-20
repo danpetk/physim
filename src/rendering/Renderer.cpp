@@ -19,38 +19,20 @@ Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shade
 
 }
 
-// void Renderer::DrawShapes(std::span<const Body> shapes) {
-//     // for (const auto& body: bodies) {
-//     //     std::visit([&] (const auto& shape) {
-//     //         // Draw(shape, body.position);
-//     //     }, body.shape);
-//     // }
-
-//     //! TEMPORARY UNDERNEATH
-    
-//     auto box = std::get<Box>(shapes[0].shape);
-//     boxVbo.BufferSubData<Vec2>(box.GetVertices(shapes[0].state));
-
-//     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-// }
-
-void Renderer::DrawShapes(std::span<const Body> shapes, double alpha) {
-    auto box = std::get<Box>(shapes[0].shape);
-    
-    // interpolate position
-    const auto& state = shapes[0].state;
-    WorldState interpState = state;
-    interpState.position = state.prevPosition + alpha * (state.position - state.prevPosition);
-
-    boxVbo.BufferSubData<Vec2>(box.GetVertices(interpState));
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+void Renderer::DrawBodies(std::span<const Body> bodies, double alpha) {
+    for (const auto& body : bodies) {
+        std::visit([&](const auto& shape){
+            HandleDrawShape(shape, body.state, alpha);
+        }, body.shape);
+    }   
 }
 
 void Renderer::ResizeView(int width, int height) {
+    float windowRatio = (static_cast<float>(height) / width);
+    float heightScaler = 2.0f / Renderer::WORLD_HEIGHT;
     std::array<float, 16> scaleProjection = {
-        (2.0f / Renderer::WORLD_HEIGHT) *(static_cast<float>(height) / width), 0.0f, 0.0f, 0.0f,
-        0.0f, 2.0f / Renderer::WORLD_HEIGHT, 0.0f, 0.0f,
+        heightScaler * windowRatio, 0.0f, 0.0f, 0.0f,
+        0.0f, heightScaler, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
@@ -58,4 +40,13 @@ void Renderer::ResizeView(int width, int height) {
     boxProgram.Bind();
     auto loc = boxProgram.GetUniformLocation("projection");
     boxProgram.SetUniformMatrix4fv(loc, scaleProjection);
+}
+
+
+void Renderer::HandleDrawShape(const Box& box, const WorldState& state, double alpha) {
+    WorldState interpState = state;
+    interpState.position = state.prevPosition + alpha * (state.position - state.prevPosition);
+
+    boxVbo.BufferSubData<Vec2>(box.GetVertices(interpState));
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

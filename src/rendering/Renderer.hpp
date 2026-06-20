@@ -12,16 +12,17 @@
 class Renderer {
 public:
     Renderer(int width, int height);
-    void DrawShapes(std::span<const Body> bodies, double alpha);
+    void DrawBodies(std::span<const Body> bodies, double alpha);
     void ResizeView(int width, int height);
 private:
-    static constexpr int WORLD_HEIGHT = 15;
+    static constexpr int WORLD_HEIGHT = 10;
 
     VertexArray boxVao;
     VertexBuffer boxVbo;
     ElementBuffer boxEbo;
     Program boxProgram;
 
-    std::vector<double> verts {-0.5, -0.5, 0.0, 0.5, 0.5, -0.5}; 
     std::vector<unsigned int> indexes {0, 1, 2, 1, 2, 3};
+
+    void HandleDrawShape(const Box& box, const WorldState& state, double alpha);
 };
