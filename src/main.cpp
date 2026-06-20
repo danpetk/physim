@@ -2,9 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Simulation.hpp"
-
-static constexpr int WIDTH = 1280;
-static constexpr int HEIGHT = 720;
+#include "utils.hpp"
 
 void APIENTRY debugCallback(GLenum source, GLenum type, GLuint id,
                             GLenum severity, GLsizei length,

@@ -25,7 +25,9 @@
 // }
 
 void Simulation::Run() {
-    physics.AddBody(Box{1, 1}, {Vec2{0, 4}, Vec2{0, 1}, 100});
+    physics.AddBody(Box{1, 1}, {Vec2{0, 4}, Vec2{0, 0}, 1.0/100});
+    physics.AddBody(Box{1, 1}, {Vec2{-2, 5}, Vec2{0, 0}, 1.0/100});
+    physics.AddBody(Box{2, 2}, {Vec2{4, 3}, Vec2{0, 0}, 1.0/100});
 
     constexpr double PHYSICS_DT = 1.0 / 60.0;
     double accumulator = 0.0;

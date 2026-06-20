@@ -7,6 +7,7 @@
 
 class Physics {
 public:
+    Physics();
     void AddBody(Shape shape, WorldState state);
     void Update(double dt);
     [[nodiscard]] std::span<const Body> GetBodies() const noexcept;

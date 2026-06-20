@@ -4,17 +4,22 @@
 #include <cassert>
 #include <variant>
 
-
 #include "Vec.hpp"
+
+enum class Gravity {
+    Static, 
+    Dynamic
+};
 
 struct WorldState {
     Vec2 position;
     Vec2 prevPosition;
     Vec2 velocity;
-    double mass;
-   
-    constexpr WorldState(Vec2 p, Vec2 v, double m) noexcept : position{p}, velocity{v}, mass{m} {
-        assert(mass > 0);
+    double invMass;
+    int gravScale;
+
+    constexpr WorldState(Vec2 p, Vec2 v, double m, Gravity g = Gravity::Dynamic) noexcept : position{p}, velocity{v}, invMass{m}, gravScale{g == Gravity::Static ? 0 : 1} {
+        assert(invMass >= 0);
     }
 };
 
