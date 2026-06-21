@@ -13,6 +13,9 @@ struct WorldState {
     Vec2 velocity;
     double invMass = 0;
     int gravScale = 1;
+
+    //! temp
+    bool stop;
 };
 
 struct Box {
@@ -24,16 +27,7 @@ struct Box {
         assert(height > 0);
     }
 
-    std::array<Vec2, 4> GetVertices(const WorldState& state) const noexcept {
-        double w2 = width / 2;
-        double h2 = height / 2;
-        return {
-            state.position + Vec2{-w2, h2},
-            state.position + Vec2{w2, h2},
-            state.position + Vec2{-w2, -h2},
-            state.position + Vec2{w2, -h2}
-        };
-    }
+    std::array<Vec2, 4> GetVertices(const WorldState& state) const noexcept;
 };
 
 struct Circle {
@@ -60,32 +54,11 @@ enum class Gravity {
 
 class BodyBuilder {
 public:
-    BodyBuilder& MakeBox(double width, double height) {
-        shape = Box{width, height};
-        return *this;
-    }
-
-    BodyBuilder& Position(Vec2 p) {
-        state.position = p;
-        return *this;
-    }
-
-    BodyBuilder& InvMass(double im) {
-        state.invMass = im;
-        return *this;
-    }
-
-    BodyBuilder& Gravity(Gravity g) {
-        state.gravScale = (g == Gravity::Static ? 0 : 1);
-        return *this;
-    }
-
-    Body build() {
-        if (!shape) {
-            std::terminate();
-        }
-        return Body{std::move(*shape), std::move(state)};
-    }
+    BodyBuilder& MakeBox(double width, double height);
+    BodyBuilder& Position(Vec2 p) noexcept;
+    BodyBuilder& InvMass(double im) noexcept;
+    BodyBuilder& GravOpt(Gravity g) noexcept;
+    Body build();
 private:
     std::optional<Shape> shape;
     WorldState state;

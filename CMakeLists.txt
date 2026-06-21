@@ -58,6 +58,7 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/Simulation.cpp
     src/physics/Physics.cpp
+    src/physics/Shape.cpp
     src/rendering/Program.cpp
     src/rendering/Renderer.cpp
     src/rendering/VertexBuffer.cpp
