@@ -10,24 +10,11 @@
 
 #include "physics/Shape.hpp"
 
-// void Simulation::Run() {
-//     physics.AddBody(Box{5, 5}, {Vec2{0, 30}, 100});
-
-//     while (!glfwWindowShouldClose(window)) {
-//         glfwPollEvents();
-//         glClear(GL_COLOR_BUFFER_BIT);
-
-//         physics.Update(1.0/60);
-//         renderer.DrawShapes(physics.GetBodies());
-
-//         glfwSwapBuffers(window);
-//     }
-// }
-
 void Simulation::Run() {
-    physics.AddBody(Box{1, 1}, {Vec2{0, 4}, Vec2{0, 0}, 1.0/100});
-    physics.AddBody(Box{1, 1}, {Vec2{-2, 5}, Vec2{0, 0}, 1.0/100});
-    physics.AddBody(Box{2, 2}, {Vec2{4, 3}, Vec2{0, 0}, 1.0/100});
+    
+    physics.AddBody(
+        BodyBuilder{}.MakeBox(1, 1).Position({0, 5}).InvMass(1.0/100).build()
+    );
 
     constexpr double PHYSICS_DT = 1.0 / 60.0;
     double accumulator = 0.0;

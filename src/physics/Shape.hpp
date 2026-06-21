@@ -2,25 +2,17 @@
 
 #include <array>
 #include <cassert>
+#include <optional>
 #include <variant>
 
 #include "Vec.hpp"
-
-enum class Gravity {
-    Static, 
-    Dynamic
-};
 
 struct WorldState {
     Vec2 position;
     Vec2 prevPosition;
     Vec2 velocity;
-    double invMass;
-    int gravScale;
-
-    constexpr WorldState(Vec2 p, Vec2 v, double m, Gravity g = Gravity::Dynamic) noexcept : position{p}, velocity{v}, invMass{m}, gravScale{g == Gravity::Static ? 0 : 1} {
-        assert(invMass >= 0);
-    }
+    double invMass = 0;
+    int gravScale = 1;
 };
 
 struct Box {
@@ -59,4 +51,42 @@ public:
     Shape shape;
     WorldState state;
     constexpr Body(Shape s, WorldState ws) noexcept : shape{std::move(s)}, state{std::move(ws)} {}
+};
+
+enum class Gravity {
+    Static, 
+    Dynamic
+};
+
+class BodyBuilder {
+public:
+    BodyBuilder& MakeBox(double width, double height) {
+        shape = Box{width, height};
+        return *this;
+    }
+
+    BodyBuilder& Position(Vec2 p) {
+        state.position = p;
+        return *this;
+    }
+
+    BodyBuilder& InvMass(double im) {
+        state.invMass = im;
+        return *this;
+    }
+
+    BodyBuilder& Gravity(Gravity g) {
+        state.gravScale = (g == Gravity::Static ? 0 : 1);
+        return *this;
+    }
+
+    Body build() {
+        if (!shape) {
+            std::terminate();
+        }
+        return Body{std::move(*shape), std::move(state)};
+    }
+private:
+    std::optional<Shape> shape;
+    WorldState state;
 };

@@ -2,7 +2,9 @@
 
 Physics::Physics() {
     // floor
-    AddBody(Box{100, 1}, {{0, -VIEWPORT_HEIGHT / 2}, {0,0}, 0, Gravity::Static});
+    AddBody(
+        BodyBuilder{}.MakeBox(100, 1).Position({0, -VIEWPORT_HEIGHT / 2}).InvMass(0).Gravity(Gravity::Static).build()
+    );
 }
 
 void Physics::Update(double dt) {
@@ -13,8 +15,8 @@ void Physics::Update(double dt) {
     }
 }
 
-void Physics::AddBody(Shape shape, WorldState state) {
-    bodies.emplace_back(std::move(shape), std::move(state));
+void Physics::AddBody(Body b) {
+    bodies.emplace_back(std::move(b));
 }
 
 std::span<const Body> Physics::GetBodies() const noexcept {
