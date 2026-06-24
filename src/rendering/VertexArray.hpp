@@ -15,8 +15,9 @@ public:
     void Bind() const noexcept;
     void Unbind() const noexcept;
 
-    void BindVertexBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+    void BindVertexBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout, GLuint div = 0);
     void BindElementBuffer(const ElementBuffer& eb);
 private:
     GLuint id;
+    GLuint index = 0;
 };

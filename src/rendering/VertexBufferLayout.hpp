@@ -1,5 +1,6 @@
 #pragma once
 
+#include <span>
 #include <vector>
 
 #include <glad/glad.h>
@@ -26,7 +27,8 @@ public:
         stride += sizeof(T) * size;
     }
 
-    void SetAndEnableAttribPointers() const;
+    std::span<const AttribInfo> GetAttributes() const noexcept { return attributes; }
+    GLsizei GetStride() const noexcept { return stride; }
 private:
     GLsizei stride = 0;
     std::vector<AttribInfo> attributes;

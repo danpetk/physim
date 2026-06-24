@@ -22,10 +22,23 @@ void VertexArray::Unbind() const noexcept {
     glBindVertexArray(0);
 }
 
-void VertexArray::BindVertexBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
+void VertexArray::BindVertexBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout, GLuint div) {
     Bind();
     vb.Bind();
-    layout.SetAndEnableAttribPointers();
+
+    for (const auto& attrib : layout.GetAttributes() ) {
+        glEnableVertexAttribArray(index);
+        glVertexAttribPointer(
+            index, 
+            attrib.size, 
+            attrib.type, 
+            attrib.normalized, 
+            layout.GetStride(), 
+            reinterpret_cast<const GLvoid*>(attrib.offset)
+        );
+        glVertexAttribDivisor(index, div);
+        ++index;
+    }
 }
 
 void VertexArray::BindElementBuffer(const ElementBuffer& eb) {

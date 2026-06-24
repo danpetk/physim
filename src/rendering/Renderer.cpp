@@ -4,25 +4,32 @@
 #include "VertexBufferLayout.hpp"
 
 Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shader", "assets/test.fragment.shader"}{
+    boxMeshVbo.CreateNewBufferWithData<Vec2>(
+        std::array<Vec2, 4>{
+            Vec2{-0.5, -0.5}, Vec2{0.5, -0.5}, 
+            Vec2{0.5, 0.5}, Vec2{-0.5, 0.5}
+        }, GL_STATIC_DRAW);
 
-    boxVbo.CreateNewBuffer(100 * sizeof(Vec2), GL_DYNAMIC_DRAW); //! < TEMP DO SOMETHING OTHER THAN 100
-    boxEbo.CreateNewBuffer(150 * sizeof(GLuint), GL_DYNAMIC_DRAW); //! < TEMP ABOVE
+    boxMeshEbo.CreateNewBufferWithData(std::array<GLuint, 6>{0, 1, 2, 2, 3, 0}, GL_STATIC_DRAW);
 
-    VertexBufferLayout boxLayout;
-    // Two double for x,y
-    boxLayout.AddAttribute<double>(2);
+    boxInstanceVbo.CreateNewBuffer(100 * sizeof(InstanceData), GL_DYNAMIC_DRAW); //! < TEMP DO SOMETHING OTHER THAN 100
+    
+    VertexBufferLayout boxMeshLayout;
+    boxMeshLayout.AddAttribute<double>(2); //< vertex position
+    boxVao.BindVertexBuffer(boxMeshVbo, boxMeshLayout);
 
-    boxVao.BindVertexBuffer(boxVbo, boxLayout);
-    boxVao.BindElementBuffer(boxEbo);
+    VertexBufferLayout boxInstanceLayout;
+    boxInstanceLayout.AddAttribute<double>(2); //< box pos
+    boxInstanceLayout.AddAttribute<double>(2); //< box scale
+    boxVao.BindVertexBuffer(boxInstanceVbo, boxInstanceLayout, 1);
+
+    boxVao.BindElementBuffer(boxMeshEbo);
 
     ResizeView(width, height);
 }
 
 void Renderer::DrawBodies(std::span<const Body> bodies, double alpha) {
-
-    currBoxInd = 0;
-    boxIndices.clear();
-    boxVerts.clear();
+    boxInstances.clear();
 
     for (const auto& body : bodies) {
         std::visit([&](const auto& shape){
@@ -30,11 +37,16 @@ void Renderer::DrawBodies(std::span<const Body> bodies, double alpha) {
         }, body.shape);
     }   
 
-    boxVbo.BufferSubData<Vec2>(boxVerts);
-    boxEbo.BufferSubData(boxIndices);
-    // std::println("{}", boxVerts.size());
-    // std::println("{}", boxIndices);
-    glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT, nullptr);
+    boxInstanceVbo.BufferSubData<InstanceData>(boxInstances);
+ 
+    //here
+    glDrawElementsInstanced(
+        GL_TRIANGLES,
+        6, // 6 indices
+        GL_UNSIGNED_INT,            
+        nullptr,                    
+        boxInstances.size()        
+    );
 }
 
 void Renderer::ResizeView(int width, int height) {
@@ -56,13 +68,7 @@ void Renderer::ResizeView(int width, int height) {
 void Renderer::HandleDrawShape(const Box& box, const WorldState& state, double alpha) {
     WorldState interpState = state;
     interpState.position = state.prevPosition + alpha * (state.position - state.prevPosition);
+    InstanceData instanceData{interpState.position, Vec2{box.width, box.height}};
 
-    //! Temp below
-    auto verts = box.GetVertices(interpState);
-    boxVerts.insert(boxVerts.end(), verts.begin(), verts.end());
-    boxIndices.push_back(currBoxInd++);
-    auto a = currBoxInd++;
-    auto b = currBoxInd++;
-    boxIndices.insert(boxIndices.end(), {a,b,a,b});
-    boxIndices.push_back(currBoxInd++);
+    boxInstances.push_back(instanceData);
 }

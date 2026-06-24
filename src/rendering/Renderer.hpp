@@ -9,6 +9,11 @@
 #include "ElementBuffer.hpp"
 #include "../physics/Shape.hpp"
 
+struct InstanceData {
+    Vec2 position;
+    Vec2 scale;
+};
+
 class Renderer {
 public:
     Renderer(int width, int height);
@@ -16,13 +21,13 @@ public:
     void ResizeView(int width, int height);
 private:
     VertexArray boxVao;
-    VertexBuffer boxVbo;
-    ElementBuffer boxEbo;
+    VertexBuffer boxMeshVbo;
+    ElementBuffer boxMeshEbo;
+
+    VertexBuffer boxInstanceVbo;
     Program boxProgram;
 
-    std::vector<Vec2> boxVerts{};
-    std::vector<GLuint> boxIndices{};
-    GLuint currBoxInd = 0;
+    std::vector<InstanceData> boxInstances{};
 
     void HandleDrawShape(const Box& box, const WorldState& state, double alpha);
 };
