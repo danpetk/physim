@@ -8,9 +8,9 @@
 #include "Vec.hpp"
 
 struct WorldState {
-    Vec2 position;
-    Vec2 prevPosition;
-    Vec2 velocity;
+    Vec2<double> position;
+    Vec2<double> prevPosition;
+    Vec2<double> velocity;
     double invMass = 0;
     int gravScale = 1;
 
@@ -27,7 +27,7 @@ struct Box {
         assert(height > 0);
     }
 
-    std::array<Vec2, 4> GetVertices(const WorldState& state) const noexcept;
+    std::array<Vec2<double>, 4> GetVertices(const WorldState& state) const noexcept;
 };
 
 struct Circle {
@@ -55,7 +55,7 @@ enum class Gravity {
 class BodyBuilder {
 public:
     BodyBuilder& MakeBox(double width, double height);
-    BodyBuilder& Position(Vec2 p) noexcept;
+    BodyBuilder& Position(Vec2<double> p) noexcept;
     BodyBuilder& InvMass(double im) noexcept;
     BodyBuilder& GravOpt(Gravity g) noexcept;
     Body build();

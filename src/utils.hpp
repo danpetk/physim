@@ -20,7 +20,7 @@ concept Numeric = std::is_arithmetic_v<T>;
 
 // Could add more if needed
 template <typename T>
-concept IsAttribType = IsOneOf<T, double, int>;
+concept IsAttribType = IsOneOf<T, float, int>;
 
 template <typename T>
 concept Bindable = requires(T t) {
@@ -42,8 +42,8 @@ private:
 
 template <IsAttribType T>
 consteval inline GLenum TypeToGLType() noexcept {
-    if constexpr (std::is_same_v<T, double>) {
-        return GL_DOUBLE;
+    if constexpr (std::is_same_v<T, float>) {
+        return GL_FLOAT;
     } else {
         static_assert(false, "Unsupported type in TypeToGLType");
     }

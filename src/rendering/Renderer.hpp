@@ -10,8 +10,8 @@
 #include "../physics/Shape.hpp"
 
 struct InstanceData {
-    Vec2 position;
-    Vec2 scale;
+    Vec2<float> position;
+    Vec2<float> scale;
 };
 
 class Renderer {

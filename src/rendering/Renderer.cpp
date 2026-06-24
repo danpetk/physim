@@ -4,10 +4,10 @@
 #include "VertexBufferLayout.hpp"
 
 Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shader", "assets/test.fragment.shader"}{
-    boxMeshVbo.CreateNewBufferWithData<Vec2>(
-        std::array<Vec2, 4>{
-            Vec2{-0.5, -0.5}, Vec2{0.5, -0.5}, 
-            Vec2{0.5, 0.5}, Vec2{-0.5, 0.5}
+    boxMeshVbo.CreateNewBufferWithData<Vec2<float>>(
+        std::array<Vec2<float>, 4>{
+            Vec2{-0.5f, -0.5f}, Vec2{0.5f, -0.5f}, 
+            Vec2{0.5f, 0.5f}, Vec2{-0.5f, 0.5f}
         }, GL_STATIC_DRAW);
 
     boxMeshEbo.CreateNewBufferWithData(std::array<GLuint, 6>{0, 1, 2, 2, 3, 0}, GL_STATIC_DRAW);
@@ -15,12 +15,12 @@ Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shade
     boxInstanceVbo.CreateNewBuffer(100 * sizeof(InstanceData), GL_DYNAMIC_DRAW); //! < TEMP DO SOMETHING OTHER THAN 100
     
     VertexBufferLayout boxMeshLayout;
-    boxMeshLayout.AddAttribute<double>(2); //< vertex position
+    boxMeshLayout.AddAttribute<float>(2); //< vertex position
     boxVao.BindVertexBuffer(boxMeshVbo, boxMeshLayout);
 
     VertexBufferLayout boxInstanceLayout;
-    boxInstanceLayout.AddAttribute<double>(2); //< box pos
-    boxInstanceLayout.AddAttribute<double>(2); //< box scale
+    boxInstanceLayout.AddAttribute<float>(2); //< box pos
+    boxInstanceLayout.AddAttribute<float>(2); //< box scale
     boxVao.BindVertexBuffer(boxInstanceVbo, boxInstanceLayout, 1);
 
     boxVao.BindElementBuffer(boxMeshEbo);
@@ -68,7 +68,11 @@ void Renderer::ResizeView(int width, int height) {
 void Renderer::HandleDrawShape(const Box& box, const WorldState& state, double alpha) {
     WorldState interpState = state;
     interpState.position = state.prevPosition + alpha * (state.position - state.prevPosition);
-    InstanceData instanceData{interpState.position, Vec2{box.width, box.height}};
+    
+    InstanceData instanceData{
+        static_cast<Vec2<float>>(interpState.position),
+        static_cast<Vec2<float>>(Vec2{box.width, box.height}) 
+    };
 
     boxInstances.push_back(instanceData);
 }

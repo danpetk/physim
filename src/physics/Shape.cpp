@@ -1,6 +1,6 @@
 #include "Shape.hpp"
 
-std::array<Vec2, 4> Box::GetVertices(const WorldState& state) const noexcept {
+std::array<Vec2<double>, 4> Box::GetVertices(const WorldState& state) const noexcept {
     double w2 = width / 2;
     double h2 = height / 2;
     return {
@@ -16,7 +16,7 @@ BodyBuilder& BodyBuilder::MakeBox(double width, double height) {
         return *this;
     }
 
-BodyBuilder& BodyBuilder::Position(Vec2 p) noexcept {
+BodyBuilder& BodyBuilder::Position(Vec2<double> p) noexcept {
     state.position = p;
     return *this;
 }

@@ -7,9 +7,10 @@
 
 using utils::Numeric;
 
+template <Numeric T>
 struct Vec2 {
-    double x = 0;
-    double y = 0;
+    T x = 0;
+    T y = 0;
 
     Vec2 operator+(const Vec2& other) const noexcept {
         return {x + other.x, y + other.y};
@@ -32,32 +33,38 @@ struct Vec2 {
     }
 
 
-    template <Numeric T>
-    Vec2 operator*(T scalar) const noexcept{
+    template <Numeric S>
+    Vec2 operator*(S scalar) const noexcept{
         return {x * scalar, y * scalar};
     }
 
     
-    template <Numeric T>
-    Vec2& operator*=(T scalar) noexcept {
+    template <Numeric S>
+    Vec2& operator*=(S scalar) noexcept {
         x *= scalar;
         y *= scalar;
         return *this;
     }
+    
+    template<typename U>
+    explicit operator Vec2<U>() const {
+        return { static_cast<U>(x), static_cast<U>(y) 
+    };
+}
 };
 
-template <Numeric T>
-Vec2 operator*(T scalar, const Vec2& other) {
+template <Numeric T, Numeric S>
+Vec2<T> operator*(S scalar, const Vec2<T>& other) {
     return other * scalar;
 }
 
-template<>
-struct std::formatter<Vec2> {
+template<Numeric T>
+struct std::formatter<Vec2<T>> {
     constexpr auto parse(std::format_parse_context& ctx) {
         return ctx.begin();
     }
 
-    auto format(const Vec2& v, std::format_context& ctx) const {
+    auto format(const Vec2<T>& v, std::format_context& ctx) const {
         return std::format_to(ctx.out(), "({}, {})", v.x, v.y);
     }
 };
