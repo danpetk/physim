@@ -23,6 +23,7 @@ void Simulation::Run() {
     physics.AddBody(
         BodyBuilder{}.MakeBox(2, 2).Position({4, 3}).InvMass(1.0/100).build()
     );
+
     constexpr double PHYSICS_DT = 1.0 / 60.0;
     double accumulator = 0.0;
     double prevTime = glfwGetTime();
