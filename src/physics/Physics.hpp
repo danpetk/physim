@@ -2,14 +2,18 @@
 
 #include <algorithm>
 #include <span>
+#include <optional>
+#include <utility>
 #include <vector>
 #include <print>
 
 #include "Shape.hpp"
 
 struct CollisionInfo {
-    size_t bodyIndex1;
-    size_t bodyIndex2;
+    size_t bodyIndex1 = 0;
+    size_t bodyIndex2 = 0;
+    double collisionDepth = 0;
+    Vec2<double> collisionNormal;
 };
 
 class Physics {
@@ -19,15 +23,22 @@ public:
     void Update(double dt);
     [[nodiscard]] std::span<const Body> GetBodies() const noexcept;
 private:  
-    void Integerate(double dt);
+    void IntegerateVelocity(double dt);
+    void IntegeratePosition(double dt);
     void DetectCollisions();
+    void ResolveCollisions() {}
     
-    bool BodiesCollideSAT(const auto& shape1, const WorldState& state1, const auto& shape2, const WorldState& state2) {
+    // A wonderful little signature
+    // I feel like one return doesnt warrant a struct because I have the other collision info so this is what we are doing
+    std::optional<std::pair<double, Vec2<double>>> BodiesCollideSAT(const auto& shape1, const WorldState& state1, const auto& shape2, const WorldState& state2) {
         auto normals1 = shape1.GetNormalizedNormals(state1);
         auto normals2 = shape2.GetNormalizedNormals(state2);
 
-        auto verticies1 = shape1.GetVertices(state1);
-        auto verticies2 = shape2.GetVertices(state2);
+        auto vertices1 = shape1.GetVertices(state1);
+        auto vertices2 = shape2.GetVertices(state2);
+
+        double collisionDepth = std::numeric_limits<double>::max();
+        Vec2<double> collisionNormal;
 
         auto projectOntoAxis = [](const auto& vertices, Vec2<double> normalizedAxis) {
             double min = std::numeric_limits<double>::max();
@@ -40,26 +51,30 @@ private:
             return std::pair{min, max};
         };
 
-        // TODO Fix this duplication
-        for (const auto& axis : normals1) {
-            auto [s1min, s1max] = projectOntoAxis(verticies1, axis);
-            auto [s2min, s2max] = projectOntoAxis(verticies2, axis);
+        auto checkAxesForCollision = [&](const auto& axes) {
+            for (const auto& axis : axes) {
+                auto [s1min, s1max] = projectOntoAxis(vertices1, axis);
+                auto [s2min, s2max] = projectOntoAxis(vertices2, axis);
 
-            if (!(s1min <= s2max && s2min <= s1max)) {
-                return false;
-            }
+                double overlap = std::min(s1max, s2max) - std::max(s1min, s2min);
+
+                if (overlap < 0) {
+                    return false;
+                }
+
+                if (overlap < collisionDepth) {
+                    collisionDepth = overlap;
+                    collisionNormal = axis;
+                }
+            }    
+            return true;
+        };
+
+        if (!checkAxesForCollision(normals1) || !checkAxesForCollision(normals2)) {
+            return std::nullopt;
         }
-        
-        for (const auto& axis : normals2) {
-            auto [s1min, s1max] = projectOntoAxis(verticies1, axis);
-            auto [s2min, s2max] = projectOntoAxis(verticies2, axis);
 
-            if (!(s1min <= s2max && s2min <= s1max)) {
-                return false;
-            }
-        }
-
-        return true;
+        return std::pair{collisionDepth, collisionNormal};
     }
 
     std::vector<Body> bodies;
