@@ -32,12 +32,14 @@ struct Vec2 {
         return *this;
     }
 
+    double Dot(const Vec2& other) const noexcept {
+        return x * other.x + y * other.y;
+    }
 
     template <Numeric S>
     Vec2 operator*(S scalar) const noexcept{
         return {x * scalar, y * scalar};
     }
-
     
     template <Numeric S>
     Vec2& operator*=(S scalar) noexcept {

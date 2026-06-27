@@ -7,6 +7,11 @@
 
 #include "Shape.hpp"
 
+struct CollisionInfo {
+    size_t bodyIndex1;
+    size_t bodyIndex2;
+};
+
 class Physics {
 public:
     Physics();
@@ -17,35 +22,46 @@ private:
     void Integerate(double dt);
     void DetectCollisions();
     
-    bool BodiesCollideSAT(const auto& shape1, WorldState& state1, const auto& shape2, WorldState& state2) {
+    bool BodiesCollideSAT(const auto& shape1, const WorldState& state1, const auto& shape2, const WorldState& state2) {
+        auto normals1 = shape1.GetNormalizedNormals(state1);
+        auto normals2 = shape2.GetNormalizedNormals(state2);
 
-        std::vector<Vec2<double>> normals {{1,0}, {0, 1}};
-        auto v1 = shape1.GetVertices(state1);
-        auto v2 = shape2.GetVertices(state2);
+        auto verticies1 = shape1.GetVertices(state1);
+        auto verticies2 = shape2.GetVertices(state2);
 
-        for (const auto& normal : normals) {
-            auto s1minx = std::ranges::min(v1, {}, &Vec2<double>::x).x;
-            auto s1maxx = std::ranges::max(v1, {}, &Vec2<double>::x).x;
-            auto s1miny = std::ranges::min(v1, {}, &Vec2<double>::y).y;
-            auto s1maxy = std::ranges::max(v1, {}, &Vec2<double>::y).y;
+        auto projectOntoAxis = [](const auto& vertices, Vec2<double> normalizedAxis) {
+            double min = std::numeric_limits<double>::max();
+            double max = std::numeric_limits<double>::lowest();
+            for (auto vertex : vertices) {
+                double product = vertex.Dot(normalizedAxis);
+                min = std::min(min, product);
+                max = std::max(max, product);
+            }
+            return std::pair{min, max};
+        };
 
-            auto s2minx = std::ranges::min(v2, {}, &Vec2<double>::x).x;
-            auto s2maxx = std::ranges::max(v2, {}, &Vec2<double>::x).x;
-            auto s2miny = std::ranges::min(v2, {}, &Vec2<double>::y).y;
-            auto s2maxy = std::ranges::max(v2, {}, &Vec2<double>::y).y;
-        
-            bool overlapsX = s1minx <= s2maxx && s2minx <= s1maxx;
-            bool overlapsY = s1miny <= s2maxy && s2miny <= s1maxy;
+        // TODO Fix this duplication
+        for (const auto& axis : normals1) {
+            auto [s1min, s1max] = projectOntoAxis(verticies1, axis);
+            auto [s2min, s2max] = projectOntoAxis(verticies2, axis);
 
-            if (!overlapsX || !overlapsY) {
+            if (!(s1min <= s2max && s2min <= s1max)) {
                 return false;
-            }       
+            }
+        }
         
+        for (const auto& axis : normals2) {
+            auto [s1min, s1max] = projectOntoAxis(verticies1, axis);
+            auto [s2min, s2max] = projectOntoAxis(verticies2, axis);
+
+            if (!(s1min <= s2max && s2min <= s1max)) {
+                return false;
+            }
         }
 
         return true;
     }
 
-    bool stop = false;
     std::vector<Body> bodies;
+    std::vector<CollisionInfo> collisionsThisFrame;
 };

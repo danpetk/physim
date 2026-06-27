@@ -13,8 +13,9 @@
 void Simulation::Run() {
     
     physics.AddBody(
-        BodyBuilder{}.MakeBox(1, 1).Position({0, 5}).InvMass(1.0/100).build()
+        BodyBuilder{}.MakeBox(1.5, 0.25).Position({0, 5}).InvMass(1.0/100).build()
     );
+
 
     physics.AddBody(
         BodyBuilder{}.MakeBox(1, 3).Position({-3, 7}).InvMass(1.0/100).build()

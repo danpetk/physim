@@ -13,9 +13,6 @@ struct WorldState {
     Vec2<double> velocity;
     double invMass = 0;
     int gravScale = 1;
-
-    //! temp
-    bool stop;
 };
 
 struct Box {
@@ -28,6 +25,7 @@ struct Box {
     }
 
     std::array<Vec2<double>, 4> GetVertices(const WorldState& state) const noexcept;
+    std::array<Vec2<double>, 2> GetNormalizedNormals(const WorldState& state) const noexcept;
 };
 
 struct Circle {
