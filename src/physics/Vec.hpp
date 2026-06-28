@@ -26,6 +26,10 @@ struct Vec2 {
         return {x - other.x, y - other.y};
     }
 
+    Vec2 operator-() const noexcept {
+        return {-x, -y};
+    }
+
     Vec2& operator-=(const Vec2& other) noexcept{
         x -= other.x;
         y -= other.y;

@@ -23,10 +23,11 @@ public:
     void Update(double dt);
     [[nodiscard]] std::span<const Body> GetBodies() const noexcept;
 private:  
-    void IntegerateVelocity(double dt);
-    void IntegeratePosition(double dt);
+    void IntegrateVelocity(double dt);
+    void IntegratePosition(double dt);
     void DetectCollisions();
-    void ResolveCollisions() {}
+    void ResolveCollisionsVelocity();
+    void ResolveCollisionsPositions();
     
     // A wonderful little signature
     // I feel like one return doesnt warrant a struct because I have the other collision info so this is what we are doing
@@ -72,6 +73,12 @@ private:
 
         if (!checkAxesForCollision(normals1) || !checkAxesForCollision(normals2)) {
             return std::nullopt;
+        }
+
+        // We do this to ensure our vector to fix the collision is facing the right way
+        Vec2<double> positionDiff = state2.position - state1.position;
+        if (collisionNormal.Dot(positionDiff) < 0) {
+            collisionNormal = -collisionNormal;
         }
 
         return std::pair{collisionDepth, collisionNormal};

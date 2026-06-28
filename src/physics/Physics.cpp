@@ -10,21 +10,22 @@ Physics::Physics() {
 }
 
 void Physics::Update(double dt) {
-    IntegerateVelocity(dt);
+    IntegrateVelocity(dt);
+    IntegratePosition(dt);
     DetectCollisions();
-    ResolveCollisions();
-    IntegeratePosition(dt);
+    ResolveCollisionsVelocity();
+    ResolveCollisionsPositions();
 }
 
-void Physics::IntegerateVelocity(double dt) {
+void Physics::IntegrateVelocity(double dt) {
     for (auto& body : bodies) {
-        body.state.prevPosition = body.state.position;  // save before step
         body.state.velocity += {0, -9.8 * dt * body.state.gravScale};
     }
 }
 
-void Physics::IntegeratePosition(double dt) {
+void Physics::IntegratePosition(double dt) {
     for (auto& body : bodies) {
+        body.state.prevPosition = body.state.position;  // save before step
         body.state.position += body.state.velocity * dt;
     }
 }
@@ -43,6 +44,43 @@ void Physics::DetectCollisions() {
                 }
             }, body1.shape, body2.shape);
         }
+    }
+}
+
+void Physics::ResolveCollisionsVelocity() {
+    for (const auto& collision : collisionsThisFrame) {
+        WorldState& state1 = bodies[collision.bodyIndex1].state;
+        WorldState& state2 = bodies[collision.bodyIndex2].state;
+
+        // impulse calculation
+        constexpr double e = 0.1;   
+        auto relativeVelocity = state1.velocity - state2.velocity;
+        double num = -(1 + e) * (relativeVelocity.Dot(collision.collisionNormal));
+        double denom = state1.invMass + state2.invMass;
+        double impulse = num / denom;
+
+        // velocity update
+        state1.velocity += (impulse * state1.invMass) * collision.collisionNormal;
+        state2.velocity -= (impulse * state2.invMass) * collision.collisionNormal;
+    }
+}
+
+void Physics::ResolveCollisionsPositions() {
+    for (const auto& collision : collisionsThisFrame) {
+        WorldState& state1 = bodies[collision.bodyIndex1].state;
+        WorldState& state2 = bodies[collision.bodyIndex2].state;
+
+        // no we update the positions to prevent sinking
+        constexpr double percent = 0.6;
+        constexpr double slop = 0.01;
+
+        double pen = std::max(collision.collisionDepth - slop, 0.0);
+        double denom = state1.invMass + state2.invMass;
+        Vec2<double> correction = (pen / denom) * percent * collision.collisionNormal;
+
+        // update positions
+        state1.position -= state1.invMass * correction;
+        state2.position += state2.invMass * correction;
     }
 }
 
