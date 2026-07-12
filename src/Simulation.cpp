@@ -18,14 +18,24 @@ void Simulation::Run() {
 
 
     physics.AddBody(
-        BodyBuilder{}.MakeBox(1, 3).Position({-3, 7}).InvMass(1.0/1).build()
+        BodyBuilder{}.MakeBox(1, 1).Position({-3, 10}).InvMass(1.0/1).build()
+    );
+    physics.AddBody(
+        BodyBuilder{}.MakeBox(1, 1).Position({-3, 7}).InvMass(1.0/1).build()
+    );
+    
+    physics.AddBody(
+        BodyBuilder{}.MakeBox(1, 1).Position({-3, 4}).InvMass(1.0/1).build()
+    );
+        physics.AddBody(
+        BodyBuilder{}.MakeBox(1, 1).Position({-3, 10}).InvMass(1.0/1).build()
     );
 
     physics.AddBody(
         BodyBuilder{}.MakeBox(2, 2).Position({4, 3}).InvMass(1.0/1).build()
     );
 
-    constexpr double PHYSICS_DT = 1.0 / 60.0;
+    constexpr double PHYSICS_DT = 1.0 / 165.0;
     double accumulator = 0.0;
     double prevTime = glfwGetTime();
 
@@ -38,15 +48,15 @@ void Simulation::Run() {
 
         glfwPollEvents();
 
-        while (accumulator >= PHYSICS_DT) {
+        // while (accumulator >= PHYSICS_DT) {
             physics.Update(PHYSICS_DT);
-            accumulator -= PHYSICS_DT;
-        }
+        //     accumulator -= PHYSICS_DT;
+        // }
 
-        double alpha = accumulator / PHYSICS_DT;
+        // double alpha = accumulator / PHYSICS_DT;
 
         glClear(GL_COLOR_BUFFER_BIT);
-        renderer.DrawBodies(physics.GetBodies(), alpha);
+        renderer.DrawBodies(physics.GetBodies(), 0);
         glfwSwapBuffers(window);
     }
 }

@@ -9,12 +9,29 @@ Physics::Physics() {
     );
 }
 
+/**
+ * TODO: Unoptimized so stacks and collisions are stable.
+ * Works for now so I can continue development but revisit in the future
+ */
 void Physics::Update(double dt) {
-    IntegrateVelocity(dt);
-    IntegratePosition(dt);
-    DetectCollisions();
-    ResolveCollisionsVelocity();
-    ResolveCollisionsPositions();
+    constexpr int substeps = 4;
+    double subDt = dt / substeps;
+
+    for (int s = 0; s < substeps; ++s) {
+        IntegrateVelocity(subDt);
+        IntegratePosition(subDt);
+    
+        DetectCollisions();
+
+        for (int i = 0; i < 10; ++i) {
+            DetectCollisions();
+            ResolveCollisionsVelocity();
+        }
+        for (int i = 0; i < 2; ++i) {
+            DetectCollisions();
+            ResolveCollisionsPositions();
+        }
+    }
 }
 
 void Physics::IntegrateVelocity(double dt) {
@@ -71,7 +88,7 @@ void Physics::ResolveCollisionsPositions() {
         WorldState& state2 = bodies[collision.bodyIndex2].state;
 
         // no we update the positions to prevent sinking
-        constexpr double percent = 0.6;
+        constexpr double percent = 0.4;
         constexpr double slop = 0.01;
 
         double pen = std::max(collision.collisionDepth - slop, 0.0);
