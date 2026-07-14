@@ -8,10 +8,15 @@
 #include "Vec.hpp"
 
 struct WorldState {
-    Vec2<double> position;
     Vec2<double> prevPosition;
-    Vec2<double> velocity;
+    Vec2<double> position;
     double invMass = 0;
+    Vec2<double> velocity;
+
+    double prevAngle = 0;
+    double angle = 0;
+    
+    
     int gravScale = 1;
 };
 

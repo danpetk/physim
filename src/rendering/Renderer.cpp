@@ -20,6 +20,7 @@ Renderer::Renderer(int width, int height) : boxProgram{"assets/test.vertex.shade
 
     VertexBufferLayout boxInstanceLayout;
     boxInstanceLayout.AddAttribute<float>(2); //< box pos
+    boxInstanceLayout.AddAttribute<float>(1); //< rotation
     boxInstanceLayout.AddAttribute<float>(2); //< box scale
     boxVao.BindVertexBuffer(boxInstanceVbo, boxInstanceLayout, 1);
 
@@ -68,9 +69,11 @@ void Renderer::ResizeView(int width, int height) {
 void Renderer::HandleDrawShape(const Box& box, const WorldState& state, double alpha) {
     WorldState interpState = state;
     interpState.position = state.prevPosition + alpha * (state.position - state.prevPosition);
-    
+    interpState.angle = state.prevAngle + alpha * (state.angle - state.prevAngle);
+
     InstanceData instanceData{
         static_cast<Vec2<float>>(interpState.position),
+        static_cast<float>(interpState.angle),
         static_cast<Vec2<float>>(Vec2{box.width, box.height}) 
     };
 

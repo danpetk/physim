@@ -11,6 +11,7 @@
 
 struct InstanceData {
     Vec2<float> position;
+    float rotation;
     Vec2<float> scale;
 };
 
