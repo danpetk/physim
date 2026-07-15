@@ -48,12 +48,12 @@ void Simulation::Run() {
 
         glfwPollEvents();
 
-        // while (accumulator >= PHYSICS_DT) {
+        while (accumulator >= PHYSICS_DT) {
             physics.Update(PHYSICS_DT);
-        //     accumulator -= PHYSICS_DT;
-        // }
+            accumulator -= PHYSICS_DT;
+        }
 
-        // double alpha = accumulator / PHYSICS_DT;
+        double alpha = accumulator / PHYSICS_DT;
 
         glClear(GL_COLOR_BUFFER_BIT);
         renderer.DrawBodies(physics.GetBodies(), 0);

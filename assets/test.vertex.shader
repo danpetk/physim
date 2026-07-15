@@ -11,8 +11,8 @@ void main() {
     vec4 relativeTransformation = vertPosition * instanceScale;
 
     mat2 rotation = mat2(
-        cos(instanceRotation), -sin(instanceRotation),
-        sin(instanceRotation),  cos(instanceRotation)
+        cos(instanceRotation), sin(instanceRotation),
+        -sin(instanceRotation),  cos(instanceRotation)
     );
 
     relativeTransformation.xy = rotation * relativeTransformation.xy;

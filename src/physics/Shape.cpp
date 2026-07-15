@@ -1,18 +1,40 @@
+#include <cmath>
+
 #include "Shape.hpp"
+
+// std::array<Vec2<double>, 4> Box::GetVertices(const WorldState& state) const noexcept {
+//     double w2 = width / 2;
+//     double h2 = height / 2;
+
+//     return {
+//         state.position + Vec2{-w2, h2},
+//         state.position + Vec2{w2, h2},
+//         state.position + Vec2{-w2, -h2},
+//         state.position + Vec2{w2, -h2}
+//     };
+// }
 
 std::array<Vec2<double>, 4> Box::GetVertices(const WorldState& state) const noexcept {
     double w2 = width / 2;
     double h2 = height / 2;
+
+    auto axes = GetNormalizedNormals(state);
+    const Vec2<double>& axisX = axes[0]; 
+    const Vec2<double>& axisY = axes[1];
+
     return {
-        state.position + Vec2{-w2, h2},
-        state.position + Vec2{w2, h2},
-        state.position + Vec2{-w2, -h2},
-        state.position + Vec2{w2, -h2}
+        state.position + axisX * -w2 + axisY *  h2,
+        state.position + axisX *  w2 + axisY *  h2,
+        state.position + axisX * -w2 + axisY * -h2,
+        state.position + axisX *  w2 + axisY * -h2
     };
-}
+}       
 
 std::array<Vec2<double>, 2> Box::GetNormalizedNormals(const WorldState& state) const noexcept {
-    return {Vec2{0.0,1.0}, Vec2{1.0, 0.0}};
+    return {
+        Vec2{std::cos(state.angle), std::sin(state.angle)},
+        Vec2{-std::sin(state.angle), std::cos(state.angle)}
+    };
 }
 
 BodyBuilder& BodyBuilder::MakeBox(double width, double height) {
