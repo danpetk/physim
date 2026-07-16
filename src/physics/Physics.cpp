@@ -42,8 +42,11 @@ void Physics::IntegrateVelocity(double dt) {
 
 void Physics::IntegratePosition(double dt) {
     for (auto& body : bodies) {
-        body.state.prevPosition = body.state.position;  // save before step
+        body.state.prevPosition = body.state.position;  
         body.state.position += body.state.velocity * dt;
+        
+        body.state.prevAngle = body.state.angle;
+        body.state.angle += body.state.angularVelocity * dt;  
     }
 }
 

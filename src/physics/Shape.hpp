@@ -13,9 +13,10 @@ struct WorldState {
     double invMass = 0;
     Vec2<double> velocity;
 
-    double prevAngle = .1;
-    double angle = .1;
-    
+    double prevAngle = -0.1;
+    double angle = -0.1;
+    double invMoment = 0;
+    double angularVelocity = 0;
     
     int gravScale = 1;
 };
@@ -31,6 +32,10 @@ struct Box {
 
     std::array<Vec2<double>, 4> GetVertices(const WorldState& state) const noexcept;
     std::array<Vec2<double>, 2> GetNormalizedNormals(const WorldState& state) const noexcept;
+
+    constexpr double ComputeMoment(double mass) const noexcept {
+        return mass * (width*width + height*height) / 12.0;
+    }
 };
 
 struct Circle {

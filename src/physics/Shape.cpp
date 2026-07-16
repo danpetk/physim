@@ -2,25 +2,13 @@
 
 #include "Shape.hpp"
 
-// std::array<Vec2<double>, 4> Box::GetVertices(const WorldState& state) const noexcept {
-//     double w2 = width / 2;
-//     double h2 = height / 2;
-
-//     return {
-//         state.position + Vec2{-w2, h2},
-//         state.position + Vec2{w2, h2},
-//         state.position + Vec2{-w2, -h2},
-//         state.position + Vec2{w2, -h2}
-//     };
-// }
-
 std::array<Vec2<double>, 4> Box::GetVertices(const WorldState& state) const noexcept {
     double w2 = width / 2;
     double h2 = height / 2;
 
     auto axes = GetNormalizedNormals(state);
-    const Vec2<double>& axisX = axes[0]; 
-    const Vec2<double>& axisY = axes[1];
+    Vec2<double> axisX = axes[0]; 
+    Vec2<double> axisY = axes[1];
 
     return {
         state.position + axisX * -w2 + axisY *  h2,
@@ -48,6 +36,7 @@ BodyBuilder& BodyBuilder::Position(Vec2<double> p) noexcept {
 }
 
 BodyBuilder& BodyBuilder::InvMass(double im) noexcept {
+    assert(im >= 0);
     state.invMass = im;
     return *this;
 }
@@ -61,5 +50,14 @@ Body BodyBuilder::build() {
     if (!shape) {
         std::terminate();
     }
+
+    if (state.invMass > 0) {
+        double mass = 1.0 / state.invMass;
+        double moment = std::visit([mass](const auto& s) {
+            return s.ComputeMoment(mass);
+        }, *shape); 
+        state.invMoment = 1.0 / moment;
+    }
+
     return Body{std::move(*shape), std::move(state)};
 }
