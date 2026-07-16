@@ -14,23 +14,18 @@ Physics::Physics() {
  * Works for now so I can continue development but revisit in the future
  */
 void Physics::Update(double dt) {
-    constexpr int substeps = 4;
-    double subDt = dt / substeps;
+    IntegrateVelocity(dt);
+    IntegratePosition(dt);
 
-    for (int s = 0; s < substeps; ++s) {
-        IntegrateVelocity(subDt);
-        IntegratePosition(subDt);
-    
+    DetectCollisions();
+
+    for (int i = 0; i < 5; ++i) {
         DetectCollisions();
-
-        for (int i = 0; i < 10; ++i) {
-            DetectCollisions();
-            ResolveCollisionsVelocity();
-        }
-        for (int i = 0; i < 2; ++i) {
-            DetectCollisions();
-            ResolveCollisionsPositions();
-        }
+        ResolveCollisionsVelocity();
+    }
+    for (int i = 0; i < 1; ++i) {
+        DetectCollisions();
+        ResolveCollisionsPositions();
     }
 }
 
@@ -75,7 +70,12 @@ void Physics::ResolveCollisionsVelocity() {
         // impulse calculation
         constexpr double e = 0.1;   
         auto relativeVelocity = state1.velocity - state2.velocity;
-        double num = -(1 + e) * (relativeVelocity.Dot(collision.collisionNormal));
+        double normalVelocity = relativeVelocity.Dot(collision.collisionNormal);
+        if (normalVelocity < 0) {
+            continue;
+        }
+
+        double num = -(1 + e) * (normalVelocity);
         double denom = state1.invMass + state2.invMass;
         double impulse = num / denom;
 

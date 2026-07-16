@@ -13,8 +13,8 @@ struct WorldState {
     double invMass = 0;
     Vec2<double> velocity;
 
-    double prevAngle = -0.1;
-    double angle = -0.1;
+    double prevAngle = -.1;
+    double angle = -.1;
     double invMoment = 0;
     double angularVelocity = 0;
     
