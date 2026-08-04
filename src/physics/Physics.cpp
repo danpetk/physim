@@ -54,8 +54,8 @@ void Physics::DetectCollisions() {
             const Body& body2 = bodies[j];
             
             std::visit([&](const auto& shape1, const auto& shape2) {
-                if (auto info = BodiesCollideSAT(shape1, body1.state, shape2, body2.state)) {
-                    collisionsThisFrame.emplace_back(i, j, info->first, info->second);
+                if (auto collision = BodiesCollideSAT(shape1, body1.state, shape2, body2.state)) {
+                    collisionsThisFrame.emplace_back(i, j, std::move(*collision));
                 }
             }, body1.shape, body2.shape);
         }
@@ -63,14 +63,15 @@ void Physics::DetectCollisions() {
 }
 
 void Physics::ResolveCollisionsVelocity() {
-    for (const auto& collision : collisionsThisFrame) {
-        WorldState& state1 = bodies[collision.bodyIndex1].state;
-        WorldState& state2 = bodies[collision.bodyIndex2].state;
+    for (const auto& info : collisionsThisFrame) {
+        WorldState& state1 = bodies[info.bodyIndex1].state;
+        WorldState& state2 = bodies[info.bodyIndex2].state;
+        const Collision& collision = info.collision;
 
         // impulse calculation
         constexpr double e = 0.1;   
         auto relativeVelocity = state1.velocity - state2.velocity;
-        double normalVelocity = relativeVelocity.Dot(collision.collisionNormal);
+        double normalVelocity = relativeVelocity.Dot(collision.normal);
         if (normalVelocity < 0) {
             continue;
         }
@@ -80,23 +81,24 @@ void Physics::ResolveCollisionsVelocity() {
         double impulse = num / denom;
 
         // velocity update
-        state1.velocity += (impulse * state1.invMass) * collision.collisionNormal;
-        state2.velocity -= (impulse * state2.invMass) * collision.collisionNormal;
+        state1.velocity += (impulse * state1.invMass) * collision.normal;
+        state2.velocity -= (impulse * state2.invMass) * collision.normal;
     }
 }
 
 void Physics::ResolveCollisionsPositions() {
-    for (const auto& collision : collisionsThisFrame) {
-        WorldState& state1 = bodies[collision.bodyIndex1].state;
-        WorldState& state2 = bodies[collision.bodyIndex2].state;
+    for (const auto& info : collisionsThisFrame) {
+        WorldState& state1 = bodies[info.bodyIndex1].state;
+        WorldState& state2 = bodies[info.bodyIndex2].state;
+        const Collision& collision = info.collision;
 
         // no we update the positions to prevent sinking
         constexpr double percent = 0.4;
         constexpr double slop = 0.01;
 
-        double pen = std::max(collision.collisionDepth - slop, 0.0);
+        double pen = std::max(collision.depth - slop, 0.0);
         double denom = state1.invMass + state2.invMass;
-        Vec2<double> correction = (pen / denom) * percent * collision.collisionNormal;
+        Vec2<double> correction = (pen / denom) * percent * collision.normal;
 
         // update positions
         state1.position -= state1.invMass * correction;

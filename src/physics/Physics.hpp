@@ -9,11 +9,15 @@
 
 #include "Shape.hpp"
 
+struct Collision {
+    double depth = 0;
+    Vec2<double> normal;
+};
+
 struct CollisionInfo {
     size_t bodyIndex1 = 0;
     size_t bodyIndex2 = 0;
-    double collisionDepth = 0;
-    Vec2<double> collisionNormal;
+    Collision collision;
 };
 
 class Physics {
@@ -29,9 +33,8 @@ private:
     void ResolveCollisionsVelocity();
     void ResolveCollisionsPositions();
     
-    // A wonderful little signature
-    // I feel like one return doesnt warrant a struct because I have the other collision info so this is what we are doing
-    std::optional<std::pair<double, Vec2<double>>> BodiesCollideSAT(const auto& shape1, const WorldState& state1, const auto& shape2, const WorldState& state2) {
+
+    std::optional<Collision> BodiesCollideSAT(const auto& shape1, const WorldState& state1, const auto& shape2, const WorldState& state2) {
         auto normals1 = shape1.GetNormalizedNormals(state1);
         auto normals2 = shape2.GetNormalizedNormals(state2);
 
@@ -81,7 +84,7 @@ private:
             collisionNormal = -collisionNormal;
         }
 
-        return std::pair{collisionDepth, collisionNormal};
+        return Collision{collisionDepth, collisionNormal};
     }
 
     std::vector<Body> bodies;

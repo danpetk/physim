@@ -53,7 +53,7 @@ void Simulation::Run() {
         double alpha = accumulator / PHYSICS_DT;
 
         glClear(GL_COLOR_BUFFER_BIT);
-        renderer.DrawBodies(physics.GetBodies(), 0);
+        renderer.DrawBodies(physics.GetBodies(), alpha);
         glfwSwapBuffers(window);
     }
 }
